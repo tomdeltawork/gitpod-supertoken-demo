@@ -1,8 +1,1 @@
-{
-	"auths": {},
-	"HttpHeaders": {
-		"X-PortainerAgent-ManagerOperation": "1",
-		"X-PortainerAgent-PublicKey": "3059301306072a8648ce3d020106082a8648ce3d0301070342000436253b462680196208cf017c69d49a4c5f5185dd7b292f10ada1c09ab1421603074f5b812b75e8732195d9a9a67aeabab51842382a739feb2661d4fedc81b963",
-		"X-PortainerAgent-Signature": "wvg60iJ0G1xX3o7ixgnJIkUgqmjFDfFDe/KN4UNVMFliIxXyp9L+DwSbK0rXy5EJwQR+UMiTatDsmmRCl5MHTg"
-	}
-}
+{"HttpHeaders":{"X-PortainerAgent-ManagerOperation":"1","X-PortainerAgent-PublicKey":"3059301306072a8648ce3d020106082a8648ce3d0301070342000436253b462680196208cf017c69d49a4c5f5185dd7b292f10ada1c09ab1421603074f5b812b75e8732195d9a9a67aeabab51842382a739feb2661d4fedc81b963","X-PortainerAgent-Signature":"fAfCALh+UW2rGadHenval4vcVvUR7vLUtxnxWWXq9w6TemMQCcS7wnjCbf+Z7qzl/CVhJmaJ7j2z5ZkmTPC9jA"},"auths":{}}

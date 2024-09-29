@@ -21,6 +21,10 @@ docker network create web
 docker-compose -f "$PORTAINER_COMPOSE_PATH" up -d
 #docker-compose -f "$SUPERTOKEN_COMPOSE_PATH" up -d
 
+# 等待一段時間讓伺服器啟動完成
+sleep 15
+echo "Wait 15 seconds..."
+
 
 # 啟動supertoken docker compose
 # 定義 Portainer API 信息
