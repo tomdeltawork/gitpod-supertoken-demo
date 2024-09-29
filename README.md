@@ -1,5 +1,9 @@
 ## init
 
 # dashboard
-email : aitteam@gmail.com
+email : aitteam@deltaww.com
+password: aitteam666
+
+# user
+email : tom.wu@deltaww.com
 password: aitteam666

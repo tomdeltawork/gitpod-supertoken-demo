@@ -9,7 +9,7 @@ services:
       - "9000:9000"  # Portainer Web UI 預設為 9000 端口
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"  # 掛載 Docker Socket
-      - "/workspace/docker-data/portainer:/data"  # 持久化數據存儲
+      - "/workspace/gitpod-supertoken-demo/docker-data/portainer:/data"  # 持久化數據存儲
     environment:
       - TZ=Asia/Taipei  # 設置時區，根據你的地區修改
       - ADMIN_USERNAME=admin  # 管理員帳號
