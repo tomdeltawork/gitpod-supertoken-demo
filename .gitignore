@@ -1,0 +1,7 @@
+.cargo/
+.docker-root/
+.gitpod/
+.pyenv_mirror/
+.vscode-remote/
+voting-app/
+go/
