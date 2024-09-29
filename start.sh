@@ -11,10 +11,22 @@ docker network create web
 #docker-compose -f "$PORTAINER_COMPOSE_PATH" up -d
 docker-compose -f "$SUPERTOKEN_COMPOSE_PATH" up -d
 
+
+cd //workspace/gitpod-supertoken-demo/codeWorkspace/supertoken-demo/backend || exit 1  # 如果目錄不存在，則退出
+npm i
+
+cd //workspace/gitpod-supertoken-demo/codeWorkspace/supertoken-demo/frontend || exit 1  # 如果目錄不存在，則退出
+npm i
+
 # 切換到目錄
 cd //workspace/gitpod-supertoken-demo/codeWorkspace/supertoken-demo || exit 1  # 如果目錄不存在，則退出
-
 npm run start
+
+# 註冊dashboard使用者
+curl --location --request POST 'http://localhost:7007/recipe/dashboard/user' \
+--header 'rid: dashboard' \
+--header 'Content-Type: application/json' \
+--data-raw '{"email": "aitteam@gmail.com","password": "aitteam666"}'
 
 # 打印提示訊息
 echo "env has been started."

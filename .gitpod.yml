@@ -1,0 +1,3 @@
+tasks:
+  - init: |
+      /workspace/gitpod-supertoken-demo/start.sh
