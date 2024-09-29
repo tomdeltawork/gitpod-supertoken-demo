@@ -47,6 +47,10 @@ fi
 
 echo "Successfully retrieved JWT token"
 
+# 停止 Docker 堆疊
+curl -s -X POST "$PORTAINER_URL/api/stacks/$STACK_ID/stop?endpointId=$ENDPOINT_ID" \
+    -H "Authorization: Bearer $TOKEN"
+
 # 啟動 Docker 堆疊，並添加 endpointId 參數
 START_RESPONSE=$(curl -s -X POST "$PORTAINER_URL/api/stacks/$STACK_ID/start?endpointId=$ENDPOINT_ID" \
     -H "Authorization: Bearer $TOKEN")
