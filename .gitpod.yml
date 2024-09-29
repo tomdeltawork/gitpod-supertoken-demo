@@ -2,3 +2,6 @@ tasks:
   - init: |
       chmod +x /workspace/gitpod-supertoken-demo/start.sh
       /workspace/gitpod-supertoken-demo/start.sh
+    command: |
+      chmod +x /workspace/gitpod-supertoken-demo/start.sh
+      /workspace/gitpod-supertoken-demo/start.sh
