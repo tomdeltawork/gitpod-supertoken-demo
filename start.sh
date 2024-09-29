@@ -1,17 +1,20 @@
 #!/bin/bash
 
 # 定義變量
-PORTAINER_COMPOSE_PATH="/workspace/gitpodwork/portainer/docker-compose.yaml"
+PORTAINER_COMPOSE_PATH="/workspace/gitpod-supertoken-demo/portainer/docker-compose.yaml"
 
-# 切換到包含 docker-compose.yaml 文件的目錄
-cd /workspace/gitpodwork/portainer || exit 1  # 如果目錄不存在，則退出
+# 建立 docker network
+docker network create web
 
 # 啟動 Docker Compose
 docker-compose -f "$PORTAINER_COMPOSE_PATH" up -d
 
-# 打印提示訊息
-echo "Portainer has been started."
+# 切換到目錄
+cd //workspace/gitpod-supertoken-demo/codeWorkspace/supertoken-demo || exit 1  # 如果目錄不存在，則退出
 
-# 建立 docker network
-docker network create web
+npm run start
+
+# 打印提示訊息
+echo "env has been started."
+
 
