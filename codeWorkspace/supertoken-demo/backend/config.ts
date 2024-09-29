@@ -31,10 +31,6 @@ export const SuperTokensConfig: TypeInput = {
     recipeList: [
         EmailPassword.init(), 
         Session.init(), 
-        Dashboard.init({
-            admins: [
-              "aitteam@gmail.com",
-            ],
-        }),
+        Dashboard.init(),
     ],
 };

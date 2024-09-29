@@ -23,10 +23,10 @@ cd //workspace/gitpod-supertoken-demo/codeWorkspace/supertoken-demo || exit 1  #
 npm run start
 
 # 註冊dashboard使用者
-curl --location --request POST 'http://localhost:7007/recipe/dashboard/user' \
---header 'rid: dashboard' \
---header 'Content-Type: application/json' \
---data-raw '{"email": "aitteam@gmail.com","password": "aitteam666"}'
+#curl --location --request POST 'http://localhost:7007/recipe/dashboard/user' \
+#--header 'rid: dashboard' \
+#--header 'Content-Type: application/json' \
+#--data-raw '{"email": "aitteam@deltaww.com","password": "aitteam666"}'
 
 # 打印提示訊息
 echo "env has been started."
