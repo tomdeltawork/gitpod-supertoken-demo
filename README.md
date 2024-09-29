@@ -1,6 +1,7 @@
 ## init
 
 # dashboard
+url : https://{your-backend}/auth/dashboard
 email : aitteam@deltaww.com
 password: aitteam666
 
