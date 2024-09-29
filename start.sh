@@ -22,8 +22,8 @@ docker-compose -f "$PORTAINER_COMPOSE_PATH" up -d
 #docker-compose -f "$SUPERTOKEN_COMPOSE_PATH" up -d
 
 # 等待一段時間讓伺服器啟動完成
-sleep 15
 echo "Wait 15 seconds..."
+sleep 15
 
 
 # 啟動supertoken docker compose
@@ -31,7 +31,7 @@ echo "Wait 15 seconds..."
 PORTAINER_URL="http://localhost:9000"
 USERNAME="admin"
 PASSWORD="1qaz2wsx3edc"
-STACK_ID="1"  # 在步驟 2 中查找堆疊 ID
+STACK_ID="1"
 ENDPOINT_ID="2"
 
 # 獲取 API Token
