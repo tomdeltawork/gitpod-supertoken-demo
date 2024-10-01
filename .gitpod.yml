@@ -1,7 +1,15 @@
 tasks:
   - init: |
-      chmod +x /workspace/gitpod-supertoken-demo/start.sh
-      /workspace/gitpod-supertoken-demo/start.sh
+      chmod +x /workspace/gitpod-supertoken-demo/start_docker.sh &&
+      chmod +x /workspace/gitpod-supertoken-demo/update_file.sh &&
+      chmod +x /workspace/gitpod-supertoken-demo/start_server.sh &&
+      source /workspace/gitpod-supertoken-demo/start_docker.sh && echo "start_docker.sh executed" &&
+      source /workspace/gitpod-supertoken-demo/update_file.sh && echo "update_file.sh executed" &&
+      source /workspace/gitpod-supertoken-demo/start_server.sh && echo "start_server.sh executed"
     command: |
-      chmod +x /workspace/gitpod-supertoken-demo/start.sh
-      /workspace/gitpod-supertoken-demo/start.sh
+      chmod +x /workspace/gitpod-supertoken-demo/start_docker.sh &&
+      chmod +x /workspace/gitpod-supertoken-demo/update_file.sh &&
+      chmod +x /workspace/gitpod-supertoken-demo/start_server.sh &&
+      source /workspace/gitpod-supertoken-demo/start_docker.sh && echo "start_docker.sh executed" &&
+      source /workspace/gitpod-supertoken-demo/update_file.sh && echo "update_file.sh executed" &&
+      source /workspace/gitpod-supertoken-demo/start_server.sh && echo "start_server.sh executed"
