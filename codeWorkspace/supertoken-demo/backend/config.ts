@@ -30,7 +30,12 @@ export const SuperTokensConfig: TypeInput = {
     // use from SuperTokens. See the full list here: https://supertokens.com/docs/guides
     recipeList: [
         EmailPassword.init(), 
-        Session.init(), 
+        Session.init({
+            cookieSecure: true,
+            cookieDomain: process.env.COOKIE_DOMAIN,
+            cookieSameSite: "none",
+            exposeAccessTokenToFrontendInCookieBasedAuth: true,
+        }),
         Dashboard.init(),
     ],
 };

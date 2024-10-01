@@ -62,6 +62,51 @@ else
     echo "Failed to start Docker stack: $START_RESPONSE"
 fi
 
+# 用於啟動supertoken*************************************************
+
+# 解析 workspace-id 和 region
+# 從 URL 中去除 https:// 和 .gitpod.io 並提取 workspace-id 和 region
+GITPOD_WORKSPACE_ID=$(echo $GITPOD_WORKSPACE_URL | sed -E 's/https:\/\/(.*)\..*\.gitpod\.io/\1/')
+GITPOD_REGION=$(echo $GITPOD_WORKSPACE_URL | sed -E 's/https:\/\/.*\.(.*)\.gitpod\.io/\1/')
+
+# 動態設置 <port>，可以修改這裡為你所需要的端口
+GITPOD_SUPERTOKEN_BACKEND_PORT=3001  # 這裡設置為你希望使用的端口，例如 3001
+GITPOD_SUPERTOKEN_WEB_PORT=3000
+# 拼接新的 URL
+GITPOD_SUPERTOKEN_BACKEND_URL="https://${GITPOD_SUPERTOKEN_BACKEND_PORT}-${GITPOD_WORKSPACE_ID}.${GITPOD_REGION}.gitpod.io"
+GITPOD_SUPERTOKEN_WEB_URL="https://${GITPOD_SUPERTOKEN_WEB_PORT}-${GITPOD_WORKSPACE_ID}.${GITPOD_REGION}.gitpod.io"
+
+# 輸出結果
+echo "GITPOD_SUPERTOKEN_BACKEND_URL: ${GITPOD_SUPERTOKEN_BACKEND_URL}"
+echo "GITPOD_SUPERTOKEN_WEB_URL: ${GITPOD_SUPERTOKEN_WEB_URL}"
+
+# 設定 .env.development 文件的路徑
+ENV_FILE_PATH="/workspace/gitpod-supertoken-demo/codeWorkspace/supertoken-demo/frontend/.env.development"
+
+# 檢查 .env.development 文件是否存在，沒有則創建
+if [ ! -f "$ENV_FILE_PATH" ]; then
+  touch "$ENV_FILE_PATH"
+  echo "創建了 .env.development 文件"
+fi
+
+# 檢查 .env.development 文件中是否已存在 VITE_GITPOD_SUPERTOKEN_BACKEND_URL
+if ! grep -q "VITE_GITPOD_SUPERTOKEN_BACKEND_URL" "$ENV_FILE_PATH"; then
+  # 如果變量不存在，則追加到 .env.development 文件
+  echo "VITE_GITPOD_SUPERTOKEN_BACKEND_URL=\"$GITPOD_SUPERTOKEN_BACKEND_URL\"" >> "$ENV_FILE_PATH"
+  echo ".env.development 文件已更新，添加 VITE_GITPOD_SUPERTOKEN_BACKEND_URL"
+else
+  echo "VITE_GITPOD_SUPERTOKEN_BACKEND_URL 已經存在於 .env.development 文件中"
+fi
+
+# 檢查 .env.development 文件中是否已存在 GITPOD_SUPERTOKEN_WEB_URL
+if ! grep -q "VITE_GITPOD_SUPERTOKEN_WEB_URL" "$ENV_FILE_PATH"; then
+  # 如果變量不存在，則追加到 .env.development 文件
+  echo "VITE_GITPOD_SUPERTOKEN_WEB_URL=\"$GITPOD_SUPERTOKEN_WEB_URL\"" >> "$ENV_FILE_PATH"
+  echo ".env.development 文件已更新，添加 VITE_GITPOD_SUPERTOKEN_WEB_URL"
+else
+  echo "VITE_GITPOD_SUPERTOKEN_WEB_URL 已經存在於 .env.development 文件中"
+fi
+
 
 # 初始化supertoken專案
 cd //workspace/gitpod-supertoken-demo/codeWorkspace/supertoken-demo/backend || exit 1  # 如果目錄不存在，則退出

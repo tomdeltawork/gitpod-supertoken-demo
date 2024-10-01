@@ -4,8 +4,8 @@ import Session from "supertokens-web-js/recipe/session";
 export function initSuperTokensUI() {
   (window as any).supertokensUIInit("supertokensui", {
     appInfo: {
-      websiteDomain: "http://localhost:3000",
-      apiDomain: "http://localhost:3001",
+      websiteDomain: import.meta.env.VITE_GITPOD_SUPERTOKEN_WEB_URL,
+      apiDomain: import.meta.env.VITE_GITPOD_SUPERTOKEN_BACKEND_URL,
       appName: "SuperTokens Demo App",
     },
     recipeList: [
@@ -19,7 +19,7 @@ export function initSuperTokensWebJS() {
   SuperTokens.init({
     appInfo: {
       appName: "SuperTokens Demo App",
-      apiDomain: "http://localhost:3001",
+      apiDomain: import.meta.env.VITE_GITPOD_SUPERTOKEN_BACKEND_URL,
     },
     recipeList: [Session.init()],
   });
