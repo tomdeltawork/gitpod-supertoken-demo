@@ -89,22 +89,26 @@ if [ ! -f "$ENV_FILE_PATH" ]; then
   echo "創建了 .env.development 文件"
 fi
 
-# 檢查 .env.development 文件中是否已存在 VITE_GITPOD_SUPERTOKEN_BACKEND_URL
-if ! grep -q "VITE_GITPOD_SUPERTOKEN_BACKEND_URL" "$ENV_FILE_PATH"; then
-  # 如果變量不存在，則追加到 .env.development 文件
-  echo "VITE_GITPOD_SUPERTOKEN_BACKEND_URL=\"$GITPOD_SUPERTOKEN_BACKEND_URL\"" >> "$ENV_FILE_PATH"
-  echo ".env.development 文件已更新，添加 VITE_GITPOD_SUPERTOKEN_BACKEND_URL"
+# 強制更新 VITE_GITPOD_SUPERTOKEN_BACKEND_URL
+if grep -q "VITE_GITPOD_SUPERTOKEN_BACKEND_URL" "$ENV_FILE_PATH"; then
+  # 如果變量已存在，使用 sed 替換
+  sed -i "s|^VITE_GITPOD_SUPERTOKEN_BACKEND_URL=.*|VITE_GITPOD_SUPERTOKEN_BACKEND_URL=\"$GITPOD_SUPERTOKEN_BACKEND_URL\"|" "$ENV_FILE_PATH"
+  echo "已更新 VITE_GITPOD_SUPERTOKEN_BACKEND_URL"
 else
-  echo "VITE_GITPOD_SUPERTOKEN_BACKEND_URL 已經存在於 .env.development 文件中"
+  # 如果變量不存在，則追加
+  echo "VITE_GITPOD_SUPERTOKEN_BACKEND_URL=\"$GITPOD_SUPERTOKEN_BACKEND_URL\"" >> "$ENV_FILE_PATH"
+  echo "已添加 VITE_GITPOD_SUPERTOKEN_BACKEND_URL"
 fi
 
-# 檢查 .env.development 文件中是否已存在 GITPOD_SUPERTOKEN_WEB_URL
-if ! grep -q "VITE_GITPOD_SUPERTOKEN_WEB_URL" "$ENV_FILE_PATH"; then
-  # 如果變量不存在，則追加到 .env.development 文件
-  echo "VITE_GITPOD_SUPERTOKEN_WEB_URL=\"$GITPOD_SUPERTOKEN_WEB_URL\"" >> "$ENV_FILE_PATH"
-  echo ".env.development 文件已更新，添加 VITE_GITPOD_SUPERTOKEN_WEB_URL"
+# 強制更新 VITE_GITPOD_SUPERTOKEN_WEB_URL
+if grep -q "VITE_GITPOD_SUPERTOKEN_WEB_URL" "$ENV_FILE_PATH"; then
+  # 如果變量已存在，使用 sed 替換
+  sed -i "s|^VITE_GITPOD_SUPERTOKEN_WEB_URL=.*|VITE_GITPOD_SUPERTOKEN_WEB_URL=\"$GITPOD_SUPERTOKEN_WEB_URL\"|" "$ENV_FILE_PATH"
+  echo "已更新 VITE_GITPOD_SUPERTOKEN_WEB_URL"
 else
-  echo "VITE_GITPOD_SUPERTOKEN_WEB_URL 已經存在於 .env.development 文件中"
+  # 如果變量不存在，則追加
+  echo "VITE_GITPOD_SUPERTOKEN_WEB_URL=\"$GITPOD_SUPERTOKEN_WEB_URL\"" >> "$ENV_FILE_PATH"
+  echo "已添加 VITE_GITPOD_SUPERTOKEN_WEB_URL"
 fi
 
 
