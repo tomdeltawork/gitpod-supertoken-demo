@@ -30,7 +30,7 @@ sh /workspace/gitpod-supertoken-demo/start_server.sh
 ```  
 2. /workspace/gitpod-supertoken-demo/README-url.md 動態列出demo使用的相關的url。  
   
-3.解釋各sh檔用途:  
+3. 解釋各sh檔用途:  
     - start_docker.sh : 初始化docker環境使用。  
     - start_server.sh : 初始化服務(supertoken service)使用。  
     - update_file.sh : 初始化檔案環境使用，因為要依據每個gitpod workspace來動態生成相關對外暴露url。  
