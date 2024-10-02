@@ -1,26 +1,25 @@
-## init 
- 
 # Dashboard 
 佈署於3000 port，可以由 PORTS頁籤 or README-url.md 找到對外url  
-url : https://{your-backend}/auth/dashboard  
-## account 
-email : aitteam@deltaww.com  
-password: aitteam666  
+  
+## Information 
+    - url : https://{your-backend}/auth/dashboard  
+    - email : aitteam@deltaww.com   
+    - password: aitteam666  
   
 # Login page 
 佈署於3001 port，可以由 PORTS頁籤 or README-url.md 找到對外url  
-url : https://{login page}/auth  
-## account  
-email : tom.wu@deltaww.com  
-password: aitteam666  
+
+## Information  
+    - url : https://{login page}/auth  
+    - email : tom.wu@deltaww.com  
+    - password: aitteam666  
   
 # Portainer
 佈署於9000 port，可以由 PORTS頁籤 or README-url.md 找到對外url  
 
-## account  
-email : admin
-password: 1qaz2wsx3edc  
-  
+## Information  
+    - email : admin  
+    - password: 1qaz2wsx3edc  
   
 # Note  
 1. 如要重新運行supertoken的backend和frontend可以執行以下。  
