@@ -43,4 +43,13 @@ sh /workspace/gitpod-supertoken-demo/start_server.sh
 3. 解釋各sh檔用途:  
     - start_docker.sh : 初始化docker環境使用。  
     - start_server.sh : 初始化服務(supertoken service)使用。  
-    - update_file.sh : 初始化檔案環境使用，因為要依據每個gitpod workspace來動態生成相關對外暴露url。  
+    - update_file.sh : 初始化檔案環境使用，因為要依據每個gitpod workspace來動態生成相關對外暴露url。 
+
+4. self hosting supabase bug處理 
+    - Vector服務無法啟動:
+        - 需要手動/workspace/gitpod-supertoken-demo/docker-data/supabase/volumes/logs/vector.yml檔案
+        - 內容填入https://github.com/supabase/supabase/blob/master/docker/volumes/logs/vector.yml
+    - Analytics服務無法啟動:
+        - 可以參考以下兩篇
+        - https://github.com/coollabsio/coolify/issues/3380
+        - https://supabase.com/docs/guides/self-hosting/docker
