@@ -20,6 +20,13 @@
 ## Information  
     - email : admin  
     - password: 1qaz2wsx3edc  
+
+# phpldapadmin
+openldap的管理界面phpldapadmin佈署於7002 port，可以由 PORTS頁籤 or README-url.md 找到對外url  
+
+## Information  
+    - Login DN : cn=admin,dc=example,dc=org  
+    - password: admin 
   
 # Note  
 1. 如要重新運行supertoken的backend和frontend可以執行以下。  
