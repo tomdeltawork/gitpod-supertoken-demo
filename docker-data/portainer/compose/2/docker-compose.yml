@@ -1,0 +1,37 @@
+version: '3.7'
+
+services:
+  openldap:
+    image: osixia/openldap:1.5.0
+    container_name: openldap
+    environment:
+      LDAP_ORGANISATION: "Example Inc."
+      LDAP_DOMAIN: "example.org"
+      LDAP_ADMIN_PASSWORD: "admin"
+    restart: always
+    ports:
+      - "7389:389"
+      - "7636:636"
+    volumes:
+      - /workspace/gitpod-supertoken-demo/docker-data/openldap/ldap_config:/var/lib/ldap
+      - /workspace/gitpod-supertoken-demo/docker-data/openldap/ldap_config:/etc/ldap/slapd.d
+    networks:
+      - web
+
+  phpldapadmin:
+    image: osixia/phpldapadmin:0.9.0
+    container_name: phpldapadmin
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: openldap
+      PHPLDAPADMIN_HTTPS: "false" 
+    restart: always
+    ports:
+      - "7002:80"  
+    depends_on:
+      - openldap
+    networks:
+      - web
+      
+networks:
+  web:
+    external: true
