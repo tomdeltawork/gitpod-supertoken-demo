@@ -1,13 +1,21 @@
 #!/bin/bash
 
-DIRECTORY="/workspace/gitpod-supertoken-demo/docker-data/supertokens/postgres/pg_tblspc"
+SUPERTOKEN_DB_DIRECTORY="/workspace/gitpod-supertoken-demo/docker-data/supertokens/postgres/pg_tblspc"
+SUPABASE_DB_DIRECTORY="/workspace/gitpod-supertoken-demo/docker-data/supabase/volumes/db/data/pg_tblspc"
+
 
 # 檢查資料夾是否存在
-if [ ! -d "$DIRECTORY" ]; then
-  echo "資料夾 $DIRECTORY 不存在，正在建立..."
-  mkdir -p "$DIRECTORY"
+if [ ! -d "$SUPERTOKEN_DB_DIRECTORY" ]; then
+  echo "資料夾 $SUPERTOKEN_DB_DIRECTORY 不存在，正在建立..."
+  mkdir -p "$SUPERTOKEN_DB_DIRECTORY"
 else
-  echo "資料夾 $DIRECTORY 已存在"
+  echo "資料夾 $SUPERTOKEN_DB_DIRECTORY 已存在"
+fi
+if [ ! -d "$SUPABASE_DB_DIRECTORY" ]; then
+  echo "資料夾 $SUPABASE_DB_DIRECTORY 不存在，正在建立..."
+  mkdir -p "$SUPABASE_DB_DIRECTORY"
+else
+  echo "資料夾 $SUPABASE_DB_DIRECTORY 已存在"
 fi
 
 # 定義變量
