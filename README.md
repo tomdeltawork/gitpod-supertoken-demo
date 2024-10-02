@@ -11,8 +11,12 @@
 
 ## Information  
     - url : https://{login page}/auth  
-    - email : tom.wu@deltaww.com  
-    - password: aitteam666  
+    - admin:
+        - email : ben.hsu@example.com
+        - password : delta666 
+    - normal:
+        - email : jack.wu@example.com
+        - password : delta666
   
 # Portainer
 佈署於9000 port，可以由 PORTS頁籤 or README-url.md 找到對外url  

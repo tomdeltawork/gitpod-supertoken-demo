@@ -85,11 +85,7 @@ cat <<EOL > "$README_FILE_PATH"
 \`GITPOD_PORTAINER_URL\`: 
 \`${GITPOD_PORTAINER_URL}\`
 
-## portainer phpldapadmin
-\`GITPOD_PORTAINER_URL\`: 
-\`${GITPOD_PORTAINER_URL}\`
-
-## phpldapadmin phpldapadmin
+## phpldapadmin url
 \`GITPOD_PHPLDAPADMIN_URL\`: 
 \`${GITPOD_PHPLDAPADMIN_URL}\`
 
