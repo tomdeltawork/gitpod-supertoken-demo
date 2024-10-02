@@ -1,4 +1,4 @@
-# Dashboard 
+# Supertoken Dashboard 
 佈署於3000 port，可以由 PORTS頁籤 or README-url.md 找到對外url  
   
 ## Information 
@@ -6,7 +6,7 @@
     - email : aitteam@deltaww.com   
     - password: aitteam666  
   
-# Login page 
+# Supertoken Login page 
 佈署於3001 port，可以由 PORTS頁籤 or README-url.md 找到對外url  
 
 ## Information  
@@ -31,6 +31,13 @@ openldap的管理界面phpldapadmin佈署於7002 port，可以由 PORTS頁籤 or
 ## Information  
     - Login DN : cn=admin,dc=example,dc=org  
     - password: admin 
+
+# supabase Dashboard
+supabase的Dashboard佈署於7000 port，可以由 PORTS頁籤 or README-url.md 找到對外url  
+
+## Information  
+    - 帳號 : aitteam@delta.com
+    - 密碼 : aitteam666 
   
 # Note  
 1. 如要重新運行supertoken的backend和frontend可以執行以下。  
@@ -46,10 +53,10 @@ sh /workspace/gitpod-supertoken-demo/start_server.sh
     - update_file.sh : 初始化檔案環境使用，因為要依據每個gitpod workspace來動態生成相關對外暴露url。 
 
 4. self hosting supabase bug處理 
+    - 如何部屬可以參考https://supabase.com/docs/guides/self-hosting/docker
     - Vector服務無法啟動:
         - 需要手動/workspace/gitpod-supertoken-demo/docker-data/supabase/volumes/logs/vector.yml檔案
         - 內容填入https://github.com/supabase/supabase/blob/master/docker/volumes/logs/vector.yml
     - Analytics服務無法啟動:
-        - 可以參考以下兩篇
+        - 可以參考以下
         - https://github.com/coollabsio/coolify/issues/3380
-        - https://supabase.com/docs/guides/self-hosting/docker
