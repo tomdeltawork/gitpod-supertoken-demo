@@ -155,6 +155,8 @@ fi
 # supabase
 
 # 將對外URL進行動態變更
+GITPOD_WORKSPACE_ID=$(echo $GITPOD_WORKSPACE_URL | sed -E 's/https:\/\/(.*)\..*\.gitpod\.io/\1/')
+GITPOD_REGION=$(echo $GITPOD_WORKSPACE_URL | sed -E 's/https:\/\/.*\.(.*)\.gitpod\.io/\1/')
 GITPOD_SUPABASE_PORT=7000
 GITPOD_SUPABASE_URL="https://${GITPOD_SUPABASE_PORT}-${GITPOD_WORKSPACE_ID}.${GITPOD_REGION}.gitpod.io"
 
