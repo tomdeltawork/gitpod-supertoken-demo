@@ -162,11 +162,21 @@ SUPABASE_ENV_API_EXTERNAL_URL="API_EXTERNAL_URL"
 SUPABASE_ENV_SUPABASE_PUBLIC_URL="SUPABASE_PUBLIC_URL"
 
 ## 獲取Stack的當前環境配置
-SUPABASE_CURRENT_ENV_VARS=$(curl -s -X GET "$PORTAINER_URL/api/stacks/$SUPABASE_STACK_ID" \
+# 获取当前Stack的文件内容 (Docker Compose文件内容)
+SUPABASE_STACK_FILE_CONTENT=$(curl -s -X GET "$PORTAINER_URL/api/stacks/$SUPABASE_STACK_ID/file?endpointId=$SUPABASE_ENDPOINT_ID" \
+  -H "Authorization: Bearer $TOKEN" | jq -r '.StackFileContent')
+
+if [ -z "$STACK_FILE_CONTENT" ]; then
+  echo "Error: Unable to get stack file content"
+  exit 1
+fi
+
+# 獲取當前環境變量
+SUPABASE_CURRENT_ENV_VARS=$(curl -s -X GET "$PORTAINER_URL/api/stacks/$SUPABASE_STACK_ID?endpointId=$SUPABASE_ENDPOINT_ID" \
   -H "Authorization: Bearer $TOKEN" | jq '.Env')
 
-## 更新指定的环境变量 insertkey 和 updatekey 的值
-SUPABASE_UPDATED_ENV_VARS=$(echo "$CURRENT_ENV_VARS" | jq '. |= map(
+# 設定更新數值
+SUPABASE_UPDATED_ENV_VARS=$(echo "$SUPABASE_CURRENT_ENV_VARS" | jq '. |= map(
     if .name == "'"$SUPABASE_ENV_API_EXTERNAL_URL"'" then .value = "'"$GITPOD_SUPABASE_URL"'" 
     elif .name == "'"$SUPABASE_ENV_SUPABASE_PUBLIC_URL"'" then .value = "'"$GITPOD_SUPABASE_URL"'" 
     else . end
@@ -174,15 +184,28 @@ SUPABASE_UPDATED_ENV_VARS=$(echo "$CURRENT_ENV_VARS" | jq '. |= map(
 
 echo "Updated Environment Variables: $SUPABASE_UPDATED_ENV_VARS"
 
-## 更新Stack的环境变量
-curl -s -X PUT "$PORTAINER_URL/api/stacks/$SUPABASE_STACK_ID" \
+# 建構json數據結構
+SUPABASE_UPDATE_PAYLOAD=$(jq -n --arg file "$SUPABASE_STACK_FILE_CONTENT" --argjson env "$SUPABASE_UPDATED_ENV_VARS" '{
+  "StackFileContent": $file,
+  "Env": $env
+}')
+
+# 更新Stack的環境變量且重新佈署
+curl -s -X PUT "$PORTAINER_URL/api/stacks/$SUPABASE_STACK_ID?endpointId=$SUPABASE_ENDPOINT_ID" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"Env": '"$SUPABASE_UPDATED_ENV_VARS"'}'
+  -d "$SUPABASE_UPDATE_PAYLOAD"
 
 echo "Environment variables updated for Stack ID: $SUPABASE_STACK_ID"
 
-# 重啟stqack
+# 重新部署Stack
+#curl -s -X POST "$PORTAINER_URL/api/stacks/$STACK_ID/deploy?endpointId=$SUPABASE_ENDPOINT_ID" \
+  #-H "Authorization: Bearer $AUTH_TOKEN"
+
+#echo "Stack redeployed successfully with updated environment variables."
+
+
+# 重啟stack
 ## 停止 Docker 堆疊
 curl -s -X POST "$PORTAINER_URL/api/stacks/$SUPABASE_STACK_ID/stop?endpointId=$SUPABASE_ENDPOINT_ID" \
     -H "Authorization: Bearer $TOKEN"
