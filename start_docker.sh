@@ -1,8 +1,7 @@
 #!/bin/bash
 
+#supertoken
 SUPERTOKEN_DB_DIRECTORY="/workspace/gitpod-supertoken-demo/docker-data/supertokens/postgres/pg_tblspc"
-SUPABASE_DB_DIRECTORY="/workspace/gitpod-supertoken-demo/docker-data/supabase/volumes/db/data/pg_tblspc"
-
 
 # 檢查資料夾是否存在
 if [ ! -d "$SUPERTOKEN_DB_DIRECTORY" ]; then
@@ -11,12 +10,33 @@ if [ ! -d "$SUPERTOKEN_DB_DIRECTORY" ]; then
 else
   echo "資料夾 $SUPERTOKEN_DB_DIRECTORY 已存在"
 fi
-if [ ! -d "$SUPABASE_DB_DIRECTORY" ]; then
-  echo "資料夾 $SUPABASE_DB_DIRECTORY 不存在，正在建立..."
-  mkdir -p "$SUPABASE_DB_DIRECTORY"
-else
-  echo "資料夾 $SUPABASE_DB_DIRECTORY 已存在"
-fi
+
+#supabase
+SUPERTOKEN_DB_DIRECTORY_LIST=(
+  "/workspace/gitpod-supertoken-demo/docker-data/supabase/volumes/db/data/pg_tblspc"
+  "/workspace/gitpod-supertoken-demo/docker-data/supabase/volumes/db/data/pg_commit_ts"
+  "/workspace/gitpod-supertoken-demo/docker-data/supabase/volumes/db/data/pg_logical"
+  "/workspace/gitpod-supertoken-demo/docker-data/supabase/volumes/db/data/pg_logical/mappings"
+  "/workspace/gitpod-supertoken-demo/docker-data/supabase/volumes/db/data/pg_logical/snapshots"
+  "/workspace/gitpod-supertoken-demo/docker-data/supabase/volumes/db/data/pg_notify"
+  "/workspace/gitpod-supertoken-demo/docker-data/supabase/volumes/db/data/pg_replslot"
+  "/workspace/gitpod-supertoken-demo/docker-data/supabase/volumes/db/data/pg_serial"
+  "/workspace/gitpod-supertoken-demo/docker-data/supabase/volumes/db/data/pg_stat"
+  "/workspace/gitpod-supertoken-demo/docker-data/supabase/volumes/db/data/pg_stat_tmp"
+  "/workspace/gitpod-supertoken-demo/docker-data/supabase/volumes/db/data/pg_twophase"
+)
+
+# 逐一檢查資料夾是否存在
+for SUPERTOKEN_DB_DIRECTORY in "${SUPERTOKEN_DB_DIRECTORY_LIST[@]}"
+do
+  if [ ! -d "$SUPERTOKEN_DB_DIRECTORY" ]; then
+    echo "資料夾 $SUPERTOKEN_DB_DIRECTORY 不存在，正在建立..."
+    mkdir -p "$SUPERTOKEN_DB_DIRECTORY"
+  else
+    echo "資料夾 $SUPERTOKEN_DB_DIRECTORY 已存在"
+  fi
+done
+
 
 # 定義變量
 PORTAINER_COMPOSE_PATH="/workspace/gitpod-supertoken-demo/portainer/docker-compose.yaml"

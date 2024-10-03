@@ -1,123 +1,71 @@
-import { cookies } from "next/headers";
-import { TryRefreshComponent } from "./tryRefreshClientComponent";
-import styles from "../page.module.css";
-import { redirect } from "next/navigation";
-import Image from "next/image";
-import { CelebrateIcon, SeparatorLine } from "../../assets/images";
-import { CallAPIButton } from "./callApiButton";
+// pages/index.tsx
+"use client";
+
+import React, { useState, useEffect } from 'react'
+import Head from 'next/head'
+import { SessionAuth, useSessionContext } from 'supertokens-auth-react/recipe/session'
 import { LinksComponent } from "./linksComponent";
-import { SessionAuthForNextJS } from "./sessionAuthForNextJS";
-import jwksClient from "jwks-rsa";
-import JsonWebToken from "jsonwebtoken";
-import type { JwtHeader, JwtPayload, SigningKeyCallback } from "jsonwebtoken";
-import { appInfo } from "../config/appInfo";
 
-const client = jwksClient({
-    jwksUri: `${appInfo.apiDomain}${appInfo.apiBasePath}/jwt/jwks.json`,
-});
+// take a look at the Creating Supabase Client section to see how to define getSupabase
+// let getSupabase: any;
+import { getSupabase } from '../utils/supabase';  // 正確匯入 getSupabase
 
-function getAccessToken(): string | undefined {
-    return cookies().get("sAccessToken")?.value;
-}
 
-function getPublicKey(header: JwtHeader, callback: SigningKeyCallback) {
-    client.getSigningKey(header.kid, (err, key) => {
-        if (err) {
-            callback(err);
-        } else {
-            const signingKey = key?.getPublicKey();
-            callback(null, signingKey);
-        }
-    });
-}
 
-async function verifyToken(token: string): Promise<JwtPayload> {
-    return new Promise((resolve, reject) => {
-        JsonWebToken.verify(token, getPublicKey, {}, (err, decoded) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(decoded as JwtPayload);
-            }
-        });
-    });
-}
+function ProtectedPage() {
+  // retrieve the authenticated user's accessTokenPayload and userId from the sessionContext
+  const session = useSessionContext()
 
-/**
- * A helper function to retrieve session details on the server side.
- *
- * NOTE: This function does not use the getSSRSession function from the supertokens-node SDK
- * because getSession can update the access token. These updated tokens would not be
- * propagated to the client side, as request interceptors do not run on the server side.
- */
-async function getSSRSessionHelper(): Promise<{
-    accessTokenPayload: JwtPayload | undefined;
-    hasToken: boolean;
-    error: Error | undefined;
-}> {
-    const accessToken = getAccessToken();
-    const hasToken = !!accessToken;
-    try {
-        if (accessToken) {
-            const decoded = await verifyToken(accessToken);
-            return { accessTokenPayload: decoded, hasToken, error: undefined };
-        }
-        return { accessTokenPayload: undefined, hasToken, error: undefined };
-    } catch (error) {
-        if (error instanceof JsonWebToken.TokenExpiredError) {
-            return { accessTokenPayload: undefined, hasToken, error: undefined };
-        }
-        return { accessTokenPayload: undefined, hasToken, error: error as Error };
+  const [userEmail, setEmail] = useState('')
+  useEffect(() => {
+    async function getUserEmail() {
+      if (session.loading) {
+        return;
+      }
+      // retrieve the supabase client who's JWT contains users userId, this will be
+      // used by supabase to check that the user can only access table entries which contain their own userId
+      
+      const supabase = getSupabase(session.accessTokenPayload.supabase_token)
+
+      // retrieve the user's name from the users table whose email matches the email in the JWT
+      const { data } = await supabase.from('users').select('email').eq('user_id', session.userId)
+
+      if (data.length > 0) {
+        setEmail(data[0].email)
+      }
     }
+    getUserEmail()
+  }, [session])
+
+  if (session.loading) {
+    return null;
+  }
+
+  return (
+    <div>
+      <Head>
+        <title>SuperTokens 💫</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <main>
+        <p>
+          You are authenticated with SuperTokens! (UserId: {session.userId})
+          <br />
+          Your email retrieved from Supabase: {userEmail}
+        </p>
+      </main>
+    </div>
+  )
 }
 
 export async function HomePage() {
-    const { accessTokenPayload, hasToken, error } = await getSSRSessionHelper();
-
-    if (error) {
-        return <div>Something went wrong while trying to get the session. Error - {error.message}</div>;
-    }
-
-    // `accessTokenPayload` will be undefined if it the session does not exist or has expired
-    if (accessTokenPayload === undefined) {
-        if (!hasToken) {
-            /**
-             * This means that the user is not logged in. If you want to display some other UI in this
-             * case, you can do so here.
-             */
-            return redirect("/auth");
-        }
-
-        /**
-         * This means that the session does not exist but we have session tokens for the user. In this case
-         * the `TryRefreshComponent` will try to refresh the session.
-         *
-         * To learn about why the 'key' attribute is required refer to: https://github.com/supertokens/supertokens-node/issues/826#issuecomment-2092144048
-         */
-        return <TryRefreshComponent key={Date.now()} />;
-    }
-
-    /**
-     * SessionAuthForNextJS will handle proper redirection for the user based on the different session states.
-     * It will redirect to the login page if the session does not exist etc.
-     */
     return (
-        <SessionAuthForNextJS>
-            <div className={styles.homeContainer}>
-                <div className={styles.mainContainer}>
-                    <div className={`${styles.topBand} ${styles.successTitle} ${styles.bold500}`}>
-                        <Image src={CelebrateIcon} alt="Login successful" className={styles.successIcon} /> Login
-                        successful
-                    </div>
-                    <div className={styles.innerContent}>
-                        <div>Your userID is:</div>
-                        <div className={`${styles.truncate} ${styles.userId}`}>{accessTokenPayload.sub}</div>
-                        <CallAPIButton />
-                    </div>
-                </div>
-                <LinksComponent />
-                <Image className={styles.separatorLine} src={SeparatorLine} alt="separator" />
-            </div>
-        </SessionAuthForNextJS>
-    );
-}
+      // We will wrap the ProtectedPage component with the SessionAuth so only an
+      // authenticated user can access it.
+      <SessionAuth>
+        <ProtectedPage />
+        <LinksComponent />
+      </SessionAuth>
+    )
+  }

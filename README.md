@@ -54,6 +54,9 @@ sh /workspace/gitpod-supertoken-demo/start_server.sh
 
 4. self hosting supabase bug處理 
     - 如何部屬可以參考https://supabase.com/docs/guides/self-hosting/docker
+    - supabase-storage狀態為unhealthy，可以將healthcheck的localhost替換成127.0.0.1
+    - supabase-studio狀態為unhealthy，可以參考以下
+        - https://github.com/supabase/supabase/issues/20655
     - Vector服務無法啟動:
         - 需要手動/workspace/gitpod-supertoken-demo/docker-data/supabase/volumes/logs/vector.yml檔案
         - 內容填入https://github.com/supabase/supabase/blob/master/docker/volumes/logs/vector.yml

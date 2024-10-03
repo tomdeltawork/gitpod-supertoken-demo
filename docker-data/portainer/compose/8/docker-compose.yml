@@ -11,9 +11,10 @@ services:
           "CMD",
           "node",
           "-e",
-          "require('http').get('http://localhost:3000/api/profile', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
+          #"require('http').get('http://localhost:3000/api/profile', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
+          "require('http').get('http://' + process.env.HOSTNAME + ':3000/api/profile', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})" 
         ]
-      timeout: 5s
+      timeout: 20s
       interval: 5s
       retries: 3
     depends_on:
@@ -235,7 +236,8 @@ services:
           "--no-verbose",
           "--tries=1",
           "--spider",
-          "http://localhost:5000/status"
+          #"http://localhost:5000/status"
+          "http://127.0.0.1:5000/status"
         ]
       timeout: 5s
       interval: 5s
