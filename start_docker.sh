@@ -166,7 +166,7 @@ SUPABASE_ENV_SUPABASE_PUBLIC_URL="SUPABASE_PUBLIC_URL"
 SUPABASE_STACK_FILE_CONTENT=$(curl -s -X GET "$PORTAINER_URL/api/stacks/$SUPABASE_STACK_ID/file?endpointId=$SUPABASE_ENDPOINT_ID" \
   -H "Authorization: Bearer $TOKEN" | jq -r '.StackFileContent')
 
-if [ -z "$STACK_FILE_CONTENT" ]; then
+if [ -z "$SUPABASE_STACK_FILE_CONTENT" ]; then
   echo "Error: Unable to get stack file content"
   exit 1
 fi
@@ -199,8 +199,8 @@ curl -s -X PUT "$PORTAINER_URL/api/stacks/$SUPABASE_STACK_ID?endpointId=$SUPABAS
 echo "Environment variables updated for Stack ID: $SUPABASE_STACK_ID"
 
 # 重新部署Stack
-#curl -s -X POST "$PORTAINER_URL/api/stacks/$STACK_ID/deploy?endpointId=$SUPABASE_ENDPOINT_ID" \
-  #-H "Authorization: Bearer $AUTH_TOKEN"
+#curl -s -X POST "$PORTAINER_URL/api/stacks/$SUPABASE_STACK_ID/deploy?endpointId=$SUPABASE_ENDPOINT_ID" \
+  #-#H "Authorization: Bearer $AUTH_TOKEN"
 
 #echo "Stack redeployed successfully with updated environment variables."
 
