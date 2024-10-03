@@ -153,15 +153,45 @@ else
 fi
 
 # supabase
-# 停止 Docker 堆疊
+
+# 將對外URL進行動態變更
+GITPOD_SUPABASE_PORT=7000
+GITPOD_SUPABASE_URL="https://${GITPOD_SUPABASE_PORT}-${GITPOD_WORKSPACE_ID}.${GITPOD_REGION}.gitpod.io"
+
+SUPABASE_ENV_API_EXTERNAL_URL="API_EXTERNAL_URL"
+SUPABASE_ENV_SUPABASE_PUBLIC_URL="SUPABASE_PUBLIC_URL"
+
+## 獲取Stack的當前環境配置
+SUPABASE_CURRENT_ENV_VARS=$(curl -s -X GET "$PORTAINER_URL/api/stacks/$SUPABASE_STACK_ID" \
+  -H "Authorization: Bearer $TOKEN" | jq '.Env')
+
+## 更新指定的环境变量 insertkey 和 updatekey 的值
+SUPABASE_UPDATED_ENV_VARS=$(echo "$CURRENT_ENV_VARS" | jq '. |= map(
+    if .name == "'"$SUPABASE_ENV_API_EXTERNAL_URL"'" then .value = "'"$GITPOD_SUPABASE_URL"'" 
+    elif .name == "'"$SUPABASE_ENV_SUPABASE_PUBLIC_URL"'" then .value = "'"$GITPOD_SUPABASE_URL"'" 
+    else . end
+)')
+
+echo "Updated Environment Variables: $SUPABASE_UPDATED_ENV_VARS"
+
+## 更新Stack的环境变量
+curl -s -X PUT "$PORTAINER_URL/api/stacks/$SUPABASE_STACK_ID" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"Env": '"$SUPABASE_UPDATED_ENV_VARS"'}'
+
+echo "Environment variables updated for Stack ID: $SUPABASE_STACK_ID"
+
+# 重啟stqack
+## 停止 Docker 堆疊
 curl -s -X POST "$PORTAINER_URL/api/stacks/$SUPABASE_STACK_ID/stop?endpointId=$SUPABASE_ENDPOINT_ID" \
     -H "Authorization: Bearer $TOKEN"
 
-# 啟動 Docker 堆疊，並添加 endpointId 參數
+## 啟動 Docker 堆疊，並添加 endpointId 參數
 SUPABASE_START_RESPONSE=$(curl -s -X POST "$PORTAINER_URL/api/stacks/$SUPABASE_STACK_ID/start?endpointId=$SUPABASE_ENDPOINT_ID" \
     -H "Authorization: Bearer $TOKEN")
 
-# 檢查是否成功啟動堆疊
+## 檢查是否成功啟動堆疊
 if [ "$SUPABASE_START_RESPONSE" == "null" ]; then
     echo "SUPABASE Docker stack started successfully"
 else
