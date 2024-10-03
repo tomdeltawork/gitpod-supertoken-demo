@@ -59,4 +59,6 @@ sh /workspace/gitpod-supertoken-demo/start_server.sh
         - 內容填入https://github.com/supabase/supabase/blob/master/docker/volumes/logs/vector.yml
     - Analytics服務無法啟動:
         - 可以參考以下
-        - https://github.com/coollabsio/coolify/issues/3380
+        - https://github.com/coollabsio/coolify/issues/3380  
+  
+5. 此demo不deploy supabase，如需deploy請參考Portainer or '/workspace/gitpod-supertoken-demo/start_docker.sh'  
