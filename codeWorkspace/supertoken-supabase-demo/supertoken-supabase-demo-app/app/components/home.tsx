@@ -8,7 +8,7 @@ import { LinksComponent } from "./linksComponent";
 
 // take a look at the Creating Supabase Client section to see how to define getSupabase
 // let getSupabase: any;
-import { getSupabase } from '../utils/supabase';  // 正確匯入 getSupabase
+// import { getSupabase } from '../utils/supabase';  // 正確匯入 getSupabase
 
 
 
@@ -22,17 +22,36 @@ function ProtectedPage() {
       if (session.loading) {
         return;
       }
-      // retrieve the supabase client who's JWT contains users userId, this will be
-      // used by supabase to check that the user can only access table entries which contain their own userId
-      
-      const supabase = getSupabase(session.accessTokenPayload.supabase_token)
 
-      // retrieve the user's name from the users table whose email matches the email in the JWT
-      const { data } = await supabase.from('users').select('email').eq('user_id', session.userId)
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_KEY;
 
-      if (data.length > 0) {
-        setEmail(data[0].email)
+      try {
+        const response = await fetch(`${supabaseUrl}/rest/v1/Users?select=email&user_id=eq.${session.userId}`, {
+          method: 'GET',
+          headers: {
+            'Apikey': supabaseAnonKey || '',
+            'Authorization': `Bearer ${session.accessTokenPayload.supabase_token}`,  // 如果需要身份驗證
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Fetched user email:', data);
+
+          if (data.length > 0) {
+            setEmail(data[0].email)
+          }
+
+          // return data;
+        } else {
+          console.error('Error fetching user email:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Fetch error:', error);
       }
+      
     }
     getUserEmail()
   }, [session])

@@ -73,6 +73,17 @@ else
   echo "已添加 CONNECTION_URI"
 fi
 
+# 強制更新 NEXT_PUBLIC_SUPABASE_URL
+if grep -q "NEXT_PUBLIC_SUPABASE_URL" "$ENV_FILE_PATH"; then
+  # 如果變量已存在，使用 sed 替換
+  sed -i "s|^NEXT_PUBLIC_SUPABASE_URL=.*|NEXT_PUBLIC_SUPABASE_URL=\"$GITPOD_SUPABASE_URL\"|" "$ENV_FILE_PATH"
+  echo "已更新 NEXT_PUBLIC_SUPABASE_URL"
+else
+  # 如果變量不存在，則追加
+  echo "NEXT_PUBLIC_SUPABASE_URL=\"$GITPOD_SUPABASE_URL\"" >> "$ENV_FILE_PATH"
+  echo "已添加 NEXT_PUBLIC_SUPABASE_URL"
+fi
+
 
 # 更新README-url.md
 # 設定 README-url.md 文件的路徑

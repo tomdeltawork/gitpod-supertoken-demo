@@ -26,46 +26,6 @@ export let backendConfig = (): TypeInput => {
                     apis: (originalImplementation) => {
                         return {
                             ...originalImplementation,
-                            async signInPOST(input) {
-                                console.log("inner signInPOST")
-                                const email = input.formFields.find(field => field.id === "email")?.value || "";
-                                const password = input.formFields.find(field => field.id === "password")?.value || "";
-
-
-                                if (originalImplementation.signInPOST) {
-                                    const passwordField = input.formFields.find(field => field.id === "password");
-                                    if (passwordField) passwordField.value = password; 
-                                        
-                                    console.log("login success");
-                                    const login_result = await originalImplementation.signInPOST(input);
-
-                                    if(login_result.status == 'OK'){
-                                        const supabase = getSupabase(login_result.session.getAccessTokenPayload().supabase_token);
-                                        debugger;
-                                        const { data, error } = await supabase
-                                        .from('test')
-                                        .select('*');  // 查詢所有欄位的資料
-                                        debugger;
-                                        if (error) {
-                                            console.error('Error fetching users:', error);
-                                        } else {
-                                            console.log('Users:', data);  // `data` 包含 `users` 表中的所有記錄
-                                        }
-                                    }
-
-                                    
-                                    
-
-    
-                                    console.log("login_result get success");
-                                    return login_result;
-                                } else {
-                                    return {
-                                        status: "GENERAL_ERROR",
-                                        message: "signInPOST method is not defined",
-                                    };
-                                }
-                            },
                             // the signUpPOST function handles sign up
                             signUpPOST: async function (input) {
                                 if (originalImplementation.signUpPOST === undefined) {
@@ -79,18 +39,11 @@ export let backendConfig = (): TypeInput => {
                                     // retrieve the accessTokenPayload from the user's session
                                     const accessTokenPayload = response.session.getAccessTokenPayload();
 
-                                    // create a supabase client with the supabase_token from the accessTokenPayload
-                                    const supabase = getSupabase(accessTokenPayload.supabase_token);
-
-                                    // store the user's email mapped to their userId in Supabase
-                                    const { error } = await supabase
-                                        .from("users")
-                                        .insert({ email: response.user.emails[0], user_id: response.user.id });
-
-                                    if (error !== null) {
-                                        console.error("supabase insert error : " + error);
-                                        throw error;
-                                    }
+                                    await createUser(
+                                        accessTokenPayload.supabase_token, 
+                                        response.user.id, 
+                                        response.user.emails[0]
+                                    );
                                 }
 
                                 return response;
@@ -141,3 +94,49 @@ export function ensureSuperTokensInit() {
         initialized = true;
     }
 }
+
+
+async function createUser(
+    access_token: string,
+    user_id: string,
+    email: string
+  ) {
+    console.log("access_token: " + access_token);
+    console.log("user_id: " + user_id);
+    console.log("email: " + email);
+  
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_KEY;
+  
+    try {
+      const response = await fetch(supabaseUrl + '/rest/v1/Users', {
+        method: 'POST',
+        headers: {
+          'Apikey': supabaseAnonKey || '',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + access_token
+        },
+        body: JSON.stringify({
+          user_id: user_id,
+          email: email
+        })
+      });
+  
+      // 檢查響應是否有內容
+      if (response.ok) {
+        const contentType = response.headers.get('Content-Type');
+  
+        // 確保響應是 JSON 格式，並且有內容
+        if (contentType && contentType.includes('application/json')) {
+          const data = await response.json();
+          console.log('User created:', data);
+        } else {
+          console.log('Response has no JSON body.');
+        }
+      } else {
+        console.error('Error creating user:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+    }
+  }

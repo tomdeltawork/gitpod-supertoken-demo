@@ -63,3 +63,7 @@ sh /workspace/gitpod-supertoken-demo/start_server.sh
     - Analytics服務無法啟動:
         - 可以參考以下
         - https://github.com/coollabsio/coolify/issues/3380
+
+5. 本次demo主要目的為達成此[目標](https://supertokens.com/docs/emailpassword/supabase-intergration/setup)  
+    - 實作過程發現使用supabase的client sdk時，產生自行簽證的JWT，並附於header的authorization送至supabase時，會發生400錯誤  
+    - 故改成使用rest api的方式來與supabase做溝通，推測可能是範例中使用的的SDK版本與當前的SDK版本不一致所導致。
