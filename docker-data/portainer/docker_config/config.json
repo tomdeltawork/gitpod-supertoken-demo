@@ -3,6 +3,6 @@
 	"HttpHeaders": {
 		"X-PortainerAgent-ManagerOperation": "1",
 		"X-PortainerAgent-PublicKey": "3059301306072a8648ce3d020106082a8648ce3d0301070342000436253b462680196208cf017c69d49a4c5f5185dd7b292f10ada1c09ab1421603074f5b812b75e8732195d9a9a67aeabab51842382a739feb2661d4fedc81b963",
-		"X-PortainerAgent-Signature": "S67pj7js/ujB0m8kWTJ8rA81e30dvY8RoiXiQTzhwdJrdT5/tnXNlyC73O0ZFnJSpt4ORMKUfFyrp1TQN8niAQ"
+		"X-PortainerAgent-Signature": "yD8SgXpmSlheGZ/tJ6a3raKI6JCVYrDoecxvfZyVlvkCB+gals8ZnyNx4dqM/U7gMpX04bzpulqLbjTrn1AGTA"
 	}
 }
