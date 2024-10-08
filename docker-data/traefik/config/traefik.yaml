@@ -1,0 +1,77 @@
+log:
+  level: DEBUG  # 可選：ERROR, WARN, INFO, DEBUG
+  filePath: "/var/log/traefik.log"  # 指定日誌文件的路徑
+  format: json  # 可選：json 或 common (默認)
+
+# 啟用訪問日誌
+accessLog:
+  filePath: "/var/log/access.log"  # 訪問日誌文件的路徑
+  format: json  # 可選：json 或 common
+  filters:  # 可選：設置訪問日誌過濾器
+    statusCodes:
+      - "200-299"  # 只記錄 2xx 範圍的狀態碼
+  fields:  # 設置要記錄的日誌字段
+    defaultMode: keep
+    headers:
+      defaultMode: drop
+      names:
+        Authorization: keep
+
+
+# 啟用 Traefik Dashboard
+api:
+  dashboard: true
+  insecure: true  # 僅用於開發環境，不建議在生產環境中使用
+
+# 定義入口點
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+# Docker provider 設定
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false  # 只有標記的服務會被 Traefik 代理
+  file:
+    filename: "./traefik.yaml"
+
+# 啟用實驗性插件
+experimental:
+  plugins:
+    traefik-jwt-plugin:
+      moduleName: "github.com/traefik-plugins/traefik-jwt-plugin"
+      version: "v0.9.0"
+      
+http:
+    middlewares:
+        my-traefik-jwt-plugin:
+            plugin:
+                traefik-jwt-plugin:
+                    JwtHeaders:
+                        X-Subject: sub
+                    Keys:
+                        - http://authentication-backend:3001/authentication-backend/jwt/jwks.json
+                        - |
+                          -----BEGIN PUBLIC KEY-----
+                          MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnzyis1ZjfNB0bBgKFMSv
+                          vkTtwlvBsaJq7S5wA+kzeVOVpVWwkWdVha4s38XM/pa/yr47av7+z3VTmvDRyAHc
+                          aT92whREFpLv9cj5lTeJSibyr/Mrm/YtjCZVWgaOYIhwrXwKLqPr/11inWsAkfIy
+                          tvHWTxZYEcXLgAXFuUuaS3uF9gEiNQwzGTU1v0FqkqTBr4B8nW3HCN47XUu0t8Y0
+                          e+lf4s4OxQawWD79J9/5d3Ry0vbV3Am1FtGJiJvOwRsIfVChDpYStTcHTCMqtvWb
+                          V6L11BWkpzGXSW4Hv43qa+GSYOD2QU68Mb59oSk2OB+BtOLpJofmbGEGgvmwyCI9
+                          MwIDAQAB
+                          -----END PUBLIC KEY-----
+                    OpaAllowField: allow
+                    OpaBody: "true"
+                    OpaHeaders:
+                        X-Allowed: allow
+                    OpaHttpStatusField: allow_status_code
+                    OpaResponseHeaders:
+                        X-Allowed: allow
+                    OpaUrl: http://opa:8181/v1/data/authz
+                    PayloadFields:
+                        - exp
+                    Required: "true"

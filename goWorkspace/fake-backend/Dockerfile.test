@@ -1,0 +1,60 @@
+# 第一階段：構建 Go 應用
+FROM golang:1.23.1-alpine AS builder
+
+# 安裝 GCC 和其他依賴，這是為了能夠正確編譯 go-sqlite3
+RUN apk add --no-cache gcc musl-dev
+
+# 設置工作目錄
+WORKDIR /app
+
+# 複製 go.mod 和 go.sum 文件以安裝依賴
+COPY go.mod go.sum ./
+
+# 安裝依賴
+RUN go mod download
+
+# 複製其餘應用程式代碼
+COPY . .
+
+# 生成 Swagger 文檔
+RUN go install github.com/swaggo/swag/cmd/swag@latest
+RUN swag init
+
+# 設置環境變量以啟用 CGO
+ENV CGO_ENABLED=1 GOOS=linux GOARCH=amd64
+
+# 構建 Go 應用，並設置為可執行的二進制文件
+RUN go build -o main .
+
+# 檢查生成的可執行文件是否存在
+RUN ls -l ./main
+
+# 第二階段：生成最終映像
+FROM alpine:latest
+
+# 安裝必要的依賴，包括 SQLite
+RUN apk --no-cache add ca-certificates sqlite
+
+# 設置工作目錄
+WORKDIR /app
+
+# 從構建階段中複製二進制文件
+COPY --from=builder /app/main .
+COPY --from=builder /app/docs ./docs
+
+# 複製 SQL 初始化文件
+COPY data.sql /app/data.sql
+
+# 創建 SQLite 資料庫的目錄，並設置權限
+RUN mkdir -p /app/db && chmod -R 777 /app/db
+
+# 暴露端口
+EXPOSE 8080
+
+# 檢查主應用程序是否存在
+RUN ls -l ./main
+
+
+# 啟動前執行 SQL 初始化數據庫
+CMD ["sh", "-c", "./main"]
+#CMD ["tail", "-f", "/dev/null"]

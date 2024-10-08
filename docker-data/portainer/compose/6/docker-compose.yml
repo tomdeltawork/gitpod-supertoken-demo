@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  anaview:
+    image: tomdeltawork/anaview-test:v1
+    #關閉對外暴露，只透過traefik
+    #ports:
+      #- "7017:80"
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.anaView.rule=Host(`${TRAEFIK_DOMAIN}`) && PathPrefix(`/${APP_BASEPATH}`)"  # 匹配路徑
+      - "traefik.http.services.anaView.loadbalancer.server.port=80"  # 將請求轉發到 anaView 的 80 端口
+    networks:
+      - web
+networks:
+  web:
+    external: true

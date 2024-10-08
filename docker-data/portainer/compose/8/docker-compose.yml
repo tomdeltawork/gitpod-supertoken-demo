@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  fake-backend:
+    image: tomdeltawork/fake-backend-test:v1 
+    ports:
+      - "7016:8080"
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.fake-backend.rule=Host(`${TRAEFIK_DOMAIN}`) && PathPrefix(`/${APP_BASEPATH}`)"  # 匹配路徑
+      - "traefik.http.services.fake-backend.loadbalancer.server.port=8080"  # 將請求轉發到 demoapp 的 80 端口
+      - "traefik.http.routers.fake-backend.middlewares=fake-backend-traefik-jwt-plugin@file"  # 使用中間件
+      #放過不驗證的rule
+      - "traefik.http.routers.fake-backend-public.rule=Host(`${TRAEFIK_DOMAIN}`) && PathPrefix(`/${APP_BASEPATH}`) && PathPrefix(`/${APP_BASEPATH}/swagger`)"
+
+      # 使用 traefik-jwt-plugin，這裡轉換成 labels
+      - "traefik.http.middlewares.fake-backend-traefik-jwt-plugin.plugin.traefik-jwt-plugin.JwtHeaders.X-Subject=sub"
+      - "traefik.http.middlewares.fake-backend-traefik-jwt-plugin.plugin.traefik-jwt-plugin.Keys=http://authentication-backend:3001/authentication-backend/jwt/jwks.json"
+      
+      - "traefik.http.middlewares.fake-backend-traefik-jwt-plugin.plugin.traefik-jwt-plugin.OpaAllowField=allow"
+      - "traefik.http.middlewares.fake-backend-traefik-jwt-plugin.plugin.traefik-jwt-plugin.OpaBody=true"
+      - "traefik.http.middlewares.fake-backend-traefik-jwt-plugin.plugin.traefik-jwt-plugin.OpaHeaders.X-Allowed=allow"
+      - "traefik.http.middlewares.fake-backend-traefik-jwt-plugin.plugin.traefik-jwt-plugin.OpaHttpStatusField=allow_status_code"
+      - "traefik.http.middlewares.fake-backend-traefik-jwt-plugin.plugin.traefik-jwt-plugin.OpaResponseHeaders.X-Allowed=allow"
+      - "traefik.http.middlewares.fake-backend-traefik-jwt-plugin.plugin.traefik-jwt-plugin.OpaUrl=http://opa:8181/v1/data/fake_backend_authz"
+      - "traefik.http.middlewares.fake-backend-traefik-jwt-plugin.plugin.traefik-jwt-plugin.PayloadFields=exp"
+      - "traefik.http.middlewares.fake-backend-traefik-jwt-plugin.plugin.traefik-jwt-plugin.Required=true"
+
+      # 將插件應用到路由
+      - "traefik.http.routers.fake-backend.middlewares=fake-backend-traefik-jwt-plugin"
+    networks:
+      - web
+
+networks:
+  web:
+    external: true

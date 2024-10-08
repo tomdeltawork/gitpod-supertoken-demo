@@ -1,0 +1,399 @@
+basePath: /
+definitions:
+  main.Project:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  main.Task:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      project_id:
+        description: 外鍵指向 Project
+        type: integer
+    type: object
+  main.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  main.Work:
+    properties:
+      hours_worked:
+        type: number
+      id:
+        type: integer
+      task_id:
+        type: integer
+      user_id:
+        type: integer
+      work_date:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: 這是一個基於 Gin 和 SQLite 的工時系統後端 API，支持 CRUD 操作.
+  title: 工時系統 API
+  version: "1.0"
+paths:
+  /projects:
+    get:
+      description: 列出所有專案
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/main.Project'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: 獲取所有專案
+      tags:
+      - Projects
+    post:
+      consumes:
+      - application/json
+      description: 創建一個新專案
+      parameters:
+      - description: 專案資料
+        in: body
+        name: project
+        required: true
+        schema:
+          $ref: '#/definitions/main.Project'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/main.Project'
+      security:
+      - BearerAuth: []
+      summary: 創建新專案
+      tags:
+      - Projects
+  /projects/{id}:
+    delete:
+      description: 根據專案 ID 刪除專案
+      parameters:
+      - description: 專案 ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: 刪除專案
+      tags:
+      - Projects
+    put:
+      consumes:
+      - application/json
+      description: 根據專案 ID 更新專案資料
+      parameters:
+      - description: 專案 ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 專案資料
+        in: body
+        name: project
+        required: true
+        schema:
+          $ref: '#/definitions/main.Project'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Project'
+      security:
+      - BearerAuth: []
+      summary: 更新專案
+      tags:
+      - Projects
+  /tasks:
+    get:
+      description: 列出所有任務
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/main.Task'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: 獲取所有任務
+      tags:
+      - Tasks
+    post:
+      consumes:
+      - application/json
+      description: 創建一個新任務
+      parameters:
+      - description: 任務資料
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/main.Task'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/main.Task'
+      security:
+      - BearerAuth: []
+      summary: 創建新任務
+      tags:
+      - Tasks
+  /tasks/{id}:
+    delete:
+      description: 根據任務 ID 刪除任務
+      parameters:
+      - description: 任務 ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: 刪除任務
+      tags:
+      - Tasks
+    put:
+      consumes:
+      - application/json
+      description: 根據任務 ID 更新任務資料
+      parameters:
+      - description: 任務 ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 任務資料
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/main.Task'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Task'
+      security:
+      - BearerAuth: []
+      summary: 更新任務
+      tags:
+      - Tasks
+  /users:
+    get:
+      description: 列出所有用戶
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/main.User'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: 獲取所有用戶
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: 創建一個新用戶
+      parameters:
+      - description: 用戶資料
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/main.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/main.User'
+      security:
+      - BearerAuth: []
+      summary: 創建新用戶
+      tags:
+      - Users
+  /users/{id}:
+    delete:
+      description: 根據用戶 ID 刪除用戶
+      parameters:
+      - description: 用戶 ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: 刪除用戶
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      description: 根據用戶 ID 更新用戶資料
+      parameters:
+      - description: 用戶 ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 用戶資料
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/main.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.User'
+      security:
+      - BearerAuth: []
+      summary: 更新用戶
+      tags:
+      - Users
+  /works:
+    get:
+      description: 列出所有工時記錄
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/main.Work'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: 獲取所有工時記錄
+      tags:
+      - Works
+    post:
+      consumes:
+      - application/json
+      description: 創建一個新的工時記錄
+      parameters:
+      - description: 工時資料
+        in: body
+        name: work
+        required: true
+        schema:
+          $ref: '#/definitions/main.Work'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/main.Work'
+      security:
+      - BearerAuth: []
+      summary: 新增工時記錄
+      tags:
+      - Works
+  /works/{id}:
+    delete:
+      description: 根據工時記錄 ID 刪除工時記錄
+      parameters:
+      - description: 工時記錄 ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+      security:
+      - BearerAuth: []
+      summary: 刪除工時記錄
+      tags:
+      - Works
+    put:
+      consumes:
+      - application/json
+      description: 根據工時記錄 ID 更新工時資料
+      parameters:
+      - description: 工時記錄 ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 工時資料
+        in: body
+        name: work
+        required: true
+        schema:
+          $ref: '#/definitions/main.Work'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Work'
+      security:
+      - BearerAuth: []
+      summary: 更新工時記錄
+      tags:
+      - Works
+securityDefinitions:
+  BearerAuth:
+    description: 請使用 Bearer token 格式，如： "Bearer {token}"
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

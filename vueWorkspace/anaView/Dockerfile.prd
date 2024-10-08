@@ -1,0 +1,32 @@
+# 1. 構建階段 - 使用 Node.js 來構建 Vue 應用
+FROM node:18-alpine AS build
+
+# 設置工作目錄
+WORKDIR /app
+
+# 複製 package.json 和 package-lock.json
+COPY package*.json ./
+
+# 安裝依賴
+RUN npm install
+
+# 複製所有項目文件
+COPY . .
+
+# 打包 Vue 應用，確保 Vite 配置了正確的 base 路徑（例如 /anaview/）
+RUN npm run build:prd
+
+# 2. 運行階段 - 使用 Nginx 提供靜態文件服務
+FROM nginx:alpine
+
+# 複製打包的文件到 Nginx 的靜態文件目錄
+COPY --from=build /app/dist /usr/share/nginx/html/anaview
+
+# 複製自定義的 Nginx 配置文件
+COPY ./nginx.conf /etc/nginx/nginx.conf
+
+# 暴露 Nginx 的默認端口 80
+EXPOSE 80
+
+# 啟動 Nginx
+CMD ["nginx", "-g", "daemon off;"]

@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  opa:
+    image: openpolicyagent/opa:0.67.0
+    ports:
+      - "7014:8181"
+    volumes:
+      - /workspace/gitpod-supertoken-demo/docker-data/opa/policies:/policies  # 掛載策略文件夾到容器中
+    restart: always
+    command:
+      - "run"
+      - "--server"
+      - "--log-level=debug"
+      #- "--set=decision_logs.console=true"
+      - "/policies"  # 加載策略文件夾
+    environment:
+      - OPA_LOG_LEVEL=debug  # 启用调试日志
+    networks:
+      - web
+
+networks:
+  web:
+    external: true  # 使用外部 Docker 網絡 (如果需要可以刪除此行並改用自定義網絡)

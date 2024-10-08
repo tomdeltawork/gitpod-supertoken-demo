@@ -1,0 +1,18 @@
+version: '3.0'
+
+services:
+  authentication-backend:
+    image: tomdeltawork/authentication-backend-test:v1
+    #關閉對外暴露，只透過traefik
+    #ports:
+      #- "7015:3001"
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.authentication-backend.rule=Host(`${TRAEFIK_DOMAIN}`) && PathPrefix(`/${APP_BASEPATH}`)"  # 匹配路徑
+      - "traefik.http.services.authentication-backend.loadbalancer.server.port=3001"  # 將請求轉發到 authentication-backend 的 3001 端口
+    networks:
+      - web
+networks:
+  web:
+    external: true

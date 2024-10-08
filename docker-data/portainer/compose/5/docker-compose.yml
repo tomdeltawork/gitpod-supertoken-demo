@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik:v2.9
+    container_name: traefik
+    restart: always
+    environment:
+      - TZ=Asia/Taipei  # 設置台灣時區
+    command:
+      - "--configFile=/traefik.yaml"  # 告訴 Traefik 使用外部 traefik.yaml 設定檔案
+    ports:
+      - "8081:80"  # 對外暴露 HTTP
+      - "443:443"  # 對外暴露 HTTPS
+      - "8082:8080"  # Traefik Dashboard
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"  # 掛載 Docker Socket 讓 Traefik 監控容器
+      - "/workspace/gitpod-supertoken-demo/docker-data/traefik/config/traefik.yaml:/traefik.yaml"  # 掛載 traefik.yaml 文件到容器
+      - "/workspace/gitpod-supertoken-demo/docker-data/traefik/log:/var/log"
+    networks:
+      - web
+
+networks:
+  web:
+    external: true  # 使用外部 Docker 網絡 (如果需要可以刪除此行並改用自定義網絡)
