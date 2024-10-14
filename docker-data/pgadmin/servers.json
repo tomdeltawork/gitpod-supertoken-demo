@@ -1,0 +1,15 @@
+{
+    "Servers": {
+      "1": {
+        "Name": "supabase-db",
+        "Group": "Servers",
+        "Host": "supabase-db",
+        "Port": 7432,
+        "MaintenanceDB": "postgres",
+        "Username": "postgres",
+        "Password": "your-super-secret-and-long-postgres-password",
+        "SSLMode": "prefer",
+        "ConnectNow": true
+      }
+    }
+  }  
