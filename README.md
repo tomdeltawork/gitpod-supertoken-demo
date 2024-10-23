@@ -38,6 +38,16 @@ supabase的Dashboard佈署於7000 port，可以由 PORTS頁籤 or README-url.md 
 ## Information  
     - 帳號 : aitteam@delta.com
     - 密碼 : aitteam666 
+
+# pgadmin Dashboard
+pgadmin的Dashboard佈署於8080 port，可以由 PORTS頁籤 or README-url.md 找到對外url  
+
+## Information  
+    - 帳號 : admin@admin.com
+    - 密碼 : admin 
+
+# restfox Dashboard
+restfox的Dashboard佈署於4004 port，可以由 PORTS頁籤 or README-url.md 找到對外url  
   
 # Note  
 1. 如要重新運行supertoken的backend和frontend可以執行以下。  

@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  restfox:
+    image: flawiddsouza/restfox:0.29.0
+    ports:
+      - "4004:4004"
+    volumes:
+      - /workspace/gitpod-supertoken-demo/docker-data/restfox:/data
+    restart: always
+    networks:
+      - web
+      
+networks:
+  web:
+    external: true

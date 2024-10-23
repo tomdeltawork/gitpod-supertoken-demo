@@ -2,7 +2,7 @@ version: '3'
 services:
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin_container
+
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com   # pgAdmin 登錄的電子郵件
       PGADMIN_DEFAULT_PASSWORD: admin          # pgAdmin 登錄的密碼

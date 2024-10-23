@@ -62,6 +62,10 @@ PASSWORD="1qaz2wsx3edc"
 SUPERTOKEN_STACK_NAME="supertoken"
 OPENLDAP_STACK_NAME="openldap"
 SUPABASE_STACK_NAME="supabase"
+PGADMIN_STACK_NAME="pgadmin"
+RESTFOX_STACK_NAME="restfox"
+
+
 
 # 獲取 API Token
 TOKEN=$(curl -s -X POST "$PORTAINER_URL/api/auth" \
@@ -84,6 +88,8 @@ STACK_DATA=$(curl -s -X GET "$PORTAINER_URL/api/stacks" \
 SUPERTOKEN_STACK_INFO=$(echo "$STACK_DATA" | jq -r ".[] | select(.Name==\"$SUPERTOKEN_STACK_NAME\") | {stackId: .Id, endpointId: .EndpointId}")
 OPENLDAP_STACK_INFO=$(echo "$STACK_DATA" | jq -r ".[] | select(.Name==\"$OPENLDAP_STACK_NAME\") | {stackId: .Id, endpointId: .EndpointId}")
 SUPABASE_STACK_INFO=$(echo "$STACK_DATA" | jq -r ".[] | select(.Name==\"$SUPABASE_STACK_NAME\") | {stackId: .Id, endpointId: .EndpointId}")
+PGADMIN_STACK_INFO=$(echo "$STACK_DATA" | jq -r ".[] | select(.Name==\"$PGADMIN_STACK_NAME\") | {stackId: .Id, endpointId: .EndpointId}")
+RESTFOX_STACK_INFO=$(echo "$STACK_DATA" | jq -r ".[] | select(.Name==\"$RESTFOX_STACK_NAME\") | {stackId: .Id, endpointId: .EndpointId}")
 
 # 檢查是否成功找到 stack 信息
 if [ -z "$SUPERTOKEN_STACK_INFO" ]; then
@@ -98,6 +104,14 @@ if [ -z "$SUPABASE_STACK_INFO" ]; then
     echo "No stack found with name: $SUPABASE_STACK_NAME"
     exit 1
 fi
+if [ -z "$PGADMIN_STACK_INFO" ]; then
+    echo "No stack found with name: $SUPABASE_STACK_NAME"
+    exit 1
+fi
+if [ -z "$RESTFOX_STACK_INFO" ]; then
+    echo "No stack found with name: $SUPABASE_STACK_NAME"
+    exit 1
+fi
 
 # 提取 stackId 和 endpointId
 SUPERTOKEN_STACK_ID=$(echo "$SUPERTOKEN_STACK_INFO" | jq -r '.stackId')
@@ -109,6 +123,11 @@ OPENLDAP_ENDPOINT_ID=$(echo "$OPENLDAP_STACK_INFO" | jq -r '.endpointId')
 SUPABASE_STACK_ID=$(echo "$SUPABASE_STACK_INFO" | jq -r '.stackId')
 SUPABASE_ENDPOINT_ID=$(echo "$SUPABASE_STACK_INFO" | jq -r '.endpointId')
 
+PGADMIN_STACK_ID=$(echo "$PGADMIN_STACK_INFO" | jq -r '.stackId')
+PGADMIN_ENDPOINT_ID=$(echo "$PGADMIN_STACK_INFO" | jq -r '.endpointId')
+
+RESTFOX_STACK_ID=$(echo "$RESTFOX_STACK_INFO" | jq -r '.stackId')
+RESTFOX_ENDPOINT_ID=$(echo "$RESTFOX_STACK_INFO" | jq -r '.endpointId')
 
 # 顯示結果
 echo "SUPERTOKEN_STACK_ID: $SUPERTOKEN_STACK_ID"
@@ -119,6 +138,12 @@ echo "OPENLDAP_ENDPOINT_ID: $OPENLDAP_ENDPOINT_ID"
 
 echo "SUPABASE_STACK_ID: $SUPABASE_STACK_ID"
 echo "SUPABASE_ENDPOINT_ID: $SUPABASE_ENDPOINT_ID"
+
+echo "PGADMIN_STACK_ID: $PGADMIN_STACK_ID"
+echo "PGADMIN_ENDPOINT_ID: $PGADMIN_ENDPOINT_ID"
+
+echo "RESTFOX_STACK_ID: $RESTFOX_STACK_ID"
+echo "RESTFOX_ENDPOINT_ID: $RESTFOX_ENDPOINT_ID"
 
 # supertoken
 # 停止 Docker 堆疊
@@ -221,4 +246,37 @@ if [ "$SUPABASE_START_RESPONSE" == "null" ]; then
     echo "SUPABASE Docker stack started successfully"
 else
     echo "Failed to start SUPABASE Docker stack: $SUPABASE_START_RESPONSE"
+fi
+
+
+# pgadmin
+# 停止 Docker 堆疊
+curl -s -X POST "$PORTAINER_URL/api/stacks/$PGADMIN_STACK_ID/stop?endpointId=$PGADMIN_ENDPOINT_ID" \
+    -H "Authorization: Bearer $TOKEN"
+
+# 啟動 Docker 堆疊，並添加 endpointId 參數
+PGADMIN_START_RESPONSE=$(curl -s -X POST "$PORTAINER_URL/api/stacks/$PGADMIN_STACK_ID/start?endpointId=$PGADMIN_ENDPOINT_ID" \
+    -H "Authorization: Bearer $TOKEN")
+
+# 檢查是否成功啟動堆疊
+if [ "$PGADMIN_START_RESPONSE" == "null" ]; then
+    echo "PGADMIN Docker stack started successfully"
+else
+    echo "Failed to start PGADMIN Docker stack: $PGADMIN_START_RESPONSE"
+fi
+
+# restfix
+# 停止 Docker 堆疊
+curl -s -X POST "$PORTAINER_URL/api/stacks/$RESTFOX_STACK_ID/stop?endpointId=$RESTFOX_ENDPOINT_ID" \
+    -H "Authorization: Bearer $TOKEN"
+
+# 啟動 Docker 堆疊，並添加 endpointId 參數
+RESTFOX_START_RESPONSE=$(curl -s -X POST "$PORTAINER_URL/api/stacks/$RESTFOX_STACK_ID/start?endpointId=$RESTFOX_ENDPOINT_ID" \
+    -H "Authorization: Bearer $TOKEN")
+
+# 檢查是否成功啟動堆疊
+if [ "$RESTFOX_START_RESPONSE" == "null" ]; then
+    echo "RESTFOX Docker stack started successfully"
+else
+    echo "Failed to start RESTFOX Docker stack: $RESTFOX_START_RESPONSE"
 fi

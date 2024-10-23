@@ -119,6 +119,14 @@ cat <<EOL > "$README_FILE_PATH"
 \`GITPOD_SUPABASE_URL\`: 
 \`${GITPOD_SUPABASE_URL}\`
 
+## pdadmin dashboard url
+\`GITPOD_PGADMIN_URL\`: 
+\`${GITPOD_PGADMIN_URL}\`
+
+## restfox dashboard url
+\`GITPOD_RESTFOX_URL\`: 
+\`${GITPOD_RESTFOX_URL}\`
+
 這些 URL 是基於當前的 Gitpod 工作區動態生成的，並應在每次工作區啟動時自動更新。
 EOL
 
