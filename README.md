@@ -1,3 +1,9 @@
+# 目的
+本次demo主要目的為實作此[官方提供的方法](https://supabase.com/docs/guides/database/postgres/custom-claims-and-role-based-access-control-rbac)  
+    - 過程中釐清官方提供的Saas版教學於Self-hosting版中implement時的可行性
+    - 可以使用本workspace內搭建的restfox來調測
+    - 也提供以下其他工具可以做使用
+
 # Supertoken Dashboard 
 佈署於3000 port，可以由 PORTS頁籤 or README-url.md 找到對外url  
   
@@ -74,6 +80,3 @@ sh /workspace/gitpod-supertoken-demo/start_server.sh
         - 可以參考以下
         - https://github.com/coollabsio/coolify/issues/3380
 
-5. 本次demo主要目的為達成此[目標](https://supertokens.com/docs/emailpassword/supabase-intergration/setup)  
-    - 實作過程發現使用supabase的client sdk時，產生自行簽證的JWT，並附於header的authorization送至supabase時，會發生400錯誤  
-    - 故改成使用rest api的方式來與supabase做溝通，推測可能是範例中使用的的SDK版本與當前的SDK版本不一致所導致。
